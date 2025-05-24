@@ -10,9 +10,11 @@ const UploadPage = () => {
   const [title, setTitle] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleUpload = (e: React.FormEvent) => {
+  const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
 
     // Validate
     if (!college || !course || !semester || !subject || !file || !title) {
@@ -20,39 +22,40 @@ const UploadPage = () => {
       return;
     }
 
-    const formData = new FormData();
-  formData.append('title', title);
-  formData.append('college', college);
-  formData.append('course', course);
-  formData.append('semester', semester);
-  formData.append('subject', subject);
-  formData.append('file', file);
+    setLoading(true);
 
-  const res = await fetch('/api/upload', {
-    method: 'POST',
-    body: formData,
-  });
+    try {
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('college', college);
+      formData.append('course', course);
+      formData.append('semester', semester);
+      formData.append('subject', subject);
+      formData.append('file', file);
 
-  const data = await res.json();
-  if (data.success) {
-    alert('Uploaded! View: ' + data.link);
-  } else {
-    setError('Upload failed');
-  }
-};
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
 
-    setError('');
-    // TODO: Upload to Google Drive & store metadata in Supabase
-    console.log({
-      title,
-      college,
-      course,
-      semester,
-      subject,
-      fileName: file.name,
-    });
-
-    alert('Upload logic will be implemented after auth setup.');
+      const data = await res.json();
+      if (data.success) {
+        alert('Uploaded! View: ' + data.link);
+        // Optionally reset form
+        setTitle('');
+        setCollege('');
+        setCourse('');
+        setSemester('');
+        setSubject('');
+        setFile(null);
+      } else {
+        setError('Upload failed');
+      }
+    } catch {
+      setError('Upload failed');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -143,9 +146,10 @@ const UploadPage = () => {
           <div className="mt-6">
             <button
               type="submit"
+              disabled={loading}
               className="w-full py-3 bg-indigo-600 text-white rounded-lg shadow-lg hover:bg-indigo-700 transition-all"
             >
-              Upload Resource
+              {loading ? 'Uploading...' : 'Upload Resource'}
             </button>
           </div>
         </form>
