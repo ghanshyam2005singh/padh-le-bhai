@@ -2,12 +2,21 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { MessageCircle, Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { MessageCircle, Menu, X, UserCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { auth } from '@/lib/firebase';
 
 const Navbar = () => {
   const pathname = usePathname();
   const [isOpen, setOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setUser(user);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const isActive = (path: string) =>
     pathname === path ? 'text-blue-600 font-semibold' : 'text-gray-700';
@@ -37,14 +46,24 @@ const Navbar = () => {
           <Link href="/upload" className={isActive('/upload')}>
             Upload
           </Link>
-          <Link href="/login" className={isActive('/login')}>
-            Login
-          </Link>
-          <Link href="/signup">
-            <button className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700 text-sm">
-              Sign Up
-            </button>
-          </Link>
+          {!user && (
+            <>
+              <Link href="/login" className={isActive('/login')}>
+                Login
+              </Link>
+              <Link href="/signup">
+                <button className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700 text-sm">
+                  Sign Up
+                </button>
+              </Link>
+            </>
+          )}
+          {user && (
+            <Link href="/account" className="flex items-center gap-2">
+              <UserCircle size={28} className="text-blue-600" />
+              <span className="hidden md:inline text-gray-700 text-sm">{user.displayName || 'Account'}</span>
+            </Link>
+          )}
           <Link href="https://iron-industry.tech/" target="_blank">
             <button
               className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-red-600 text-white px-4 py-1.5 rounded hover:from-pink-600 hover:to-red-700 text-sm shadow-md transition-all"
@@ -72,18 +91,28 @@ const Navbar = () => {
             >
               Upload
             </Link>
-            <Link
-              href="/login"
-              className={isActive('/login')}
-              onClick={() => setOpen(false)}
-            >
-              Login
-            </Link>
-            <Link href="/signup" onClick={() => setOpen(false)}>
-              <button className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700 text-sm w-full text-left">
-                Sign Up
-              </button>
-            </Link>
+           {!user && (
+              <>
+                <Link
+                  href="/login"
+                  className={isActive('/login')}
+                  onClick={() => setOpen(false)}
+                >
+                  Login
+                </Link>
+                <Link href="/signup" onClick={() => setOpen(false)}>
+                  <button className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700 text-sm w-full text-left">
+                    Sign Up
+                  </button>
+                </Link>
+              </>
+            )}
+            {user && (
+              <Link href="/account" onClick={() => setOpen(false)} className="flex items-center gap-2">
+                <UserCircle size={28} className="text-blue-600" />
+                <span className="text-gray-700 text-sm">{user.displayName || 'Account'}</span>
+              </Link>
+            )}
             <Link href="https://iron-industry.tech/" target="_blank" onClick={() => setOpen(false)}>
               <button
                 className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-red-600 text-white px-4 py-1.5 rounded hover:from-pink-600 hover:to-red-700 text-sm shadow-md transition-all w-full text-left"
