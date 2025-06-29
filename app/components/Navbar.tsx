@@ -5,12 +5,12 @@ import { usePathname } from 'next/navigation';
 import { MessageCircle, Menu, X, UserCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { auth } from '@/lib/firebase';
-import { signOut } from 'firebase/auth';
+import { signOut, User } from 'firebase/auth';
 
 const Navbar = () => {
   const pathname = usePathname();
   const [isOpen, setOpen] = useState(false);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
