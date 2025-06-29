@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { MessageCircle, Menu, X, UserCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { auth } from '@/lib/firebase';
+import { signOut } from 'firebase/auth';
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -18,6 +19,11 @@ const Navbar = () => {
     return () => unsubscribe();
   }, []);
 
+   const handleLogout = async () => {
+    await signOut(auth);
+    setUser(null);
+  };
+
   const isActive = (path: string) =>
     pathname === path ? 'text-blue-600 font-semibold' : 'text-gray-700';
 
@@ -30,13 +36,15 @@ const Navbar = () => {
         </Link>
 
         {/* Hamburger for mobile */}
-        <button
-          className="md:hidden ml-auto"
-          onClick={() => setOpen((prev) => !prev)}
-          aria-label="Toggle Menu"
-        >
-          {isOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
+       <button
+  className="md:hidden ml-auto p-1 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+  onClick={() => setOpen((prev) => !prev)}
+  aria-label="Toggle Menu"
+>
+  {isOpen
+    ? <X size={28} className="text-blue-700" />
+    : <Menu size={28} className="text-blue-700" />}
+</button>
 
         {/* Desktop Links */}
         <div className="hidden md:flex flex-row gap-6 text-base items-center flex-wrap justify-end">
@@ -59,10 +67,18 @@ const Navbar = () => {
             </>
           )}
           {user && (
-            <Link href="/account" className="flex items-center gap-2">
-              <UserCircle size={28} className="text-blue-600" />
-              <span className="hidden md:inline text-gray-700 text-sm">{user.displayName || 'Account'}</span>
-            </Link>
+            <>
+              <Link href="/account" className="flex items-center gap-2">
+                <UserCircle size={28} className="text-blue-600" />
+                <span className="hidden md:inline text-gray-700 text-sm">{user.displayName || 'Account'}</span>
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="ml-2 bg-gray-200 text-gray-700 px-3 py-1.5 rounded hover:bg-gray-300 text-sm"
+              >
+                Logout
+              </button>
+            </>
           )}
           <Link href="https://iron-industry.tech/" target="_blank">
             <button
@@ -108,10 +124,18 @@ const Navbar = () => {
               </>
             )}
             {user && (
-              <Link href="/account" onClick={() => setOpen(false)} className="flex items-center gap-2">
-                <UserCircle size={28} className="text-blue-600" />
-                <span className="text-gray-700 text-sm">{user.displayName || 'Account'}</span>
-              </Link>
+              <>
+                <Link href="/account" onClick={() => setOpen(false)} className="flex items-center gap-2">
+                  <UserCircle size={28} className="text-blue-600" />
+                  <span className="text-gray-700 text-sm">{user.displayName || 'Account'}</span>
+                </Link>
+                <button
+                  onClick={() => { handleLogout(); setOpen(false); }}
+                  className="mt-2 bg-gray-200 text-gray-700 px-3 py-1.5 rounded hover:bg-gray-300 text-sm w-full text-left"
+                >
+                  Logout
+                </button>
+              </>
             )}
             <Link href="https://iron-industry.tech/" target="_blank" onClick={() => setOpen(false)}>
               <button
