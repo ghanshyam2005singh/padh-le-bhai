@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { createUserWithEmailAndPassword, sendEmailVerification, signOut } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
+import Navbar from '../components/Navbar';
 
 const SignupPage = () => {
   const router = useRouter();
@@ -67,8 +68,9 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 flex justify-center items-center">
-      <div className="max-w-lg w-full p-8 bg-white rounded-lg shadow-xl">
+    <div className="min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+      <Navbar />
+      <div className="max-w-lg w-full p-8 bg-white rounded-lg shadow-xl justify-center items-center mx-auto mt-10">
         <h1 className="text-4xl font-extrabold text-center text-indigo-700 mb-8">Create Your Account</h1>
 
         {verificationSent ? (
