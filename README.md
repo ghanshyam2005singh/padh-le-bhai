@@ -44,7 +44,7 @@ npx tailwindcss init -p
 npm install googleapis
 npm install firebase-admin
 npm install formidable
-
+npm install react-hot-toast
 npm install --save-dev @types/formidable
 
 
@@ -86,26 +86,3 @@ For any issues or support, please contact: `ironindustry.support@gmail.com`
 © 2025 Iron Industry. All rights reserved.
 
 ```
-
----
-
-Let me know if you want the GitHub badges, Firebase setup guide, or deployment instructions added next!
-```
-
-## Issues
-1. resources are not properly filterling and already data filled
-2. implement fetching from drive
-3. implement toast instead of alert
-4. implement upload with legal disclaimer popup while uploading files
-5. in signup page if already have account then login option and in loginn page if not have account then signup option
-6. implement unqiue downloads for each file
-7. user can open pdf but to download they need to create account
-8. add option to upload on resource page too
-9. when user uploads a file it will got a form where cllg sem subject course asked then it will get uploaded there
-10. after creating account user will be redirect to upload or download page with upper corner profile icon
-11. save users informations in database
-
-## works
-1. account create verify login forgot drive api firebase admin api implemented
-2. pending fetching resources and uploading and a dashboard to manage the uploaded data number of download earning delete etc etc
-3. drive.ts pending

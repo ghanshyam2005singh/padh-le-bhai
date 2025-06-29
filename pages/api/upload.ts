@@ -1,10 +1,11 @@
 import { google } from 'googleapis';
-import { NextRequest, NextResponse } from 'next/server';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import formidable, { File } from 'formidable';
 import fs from 'fs/promises';
 import { Readable } from 'stream';
 import { initializeApp, cert, getApps } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
+import { getAuth } from 'firebase-admin/auth';
 
 // Disable body parsing so we can use formidable
 export const config = {
@@ -56,18 +57,15 @@ async function getOrCreateFolder(
 import type { IncomingMessage } from 'http';
 
 async function parseFormData(
-  req: NextRequest
+  req: NextApiRequest
 ): Promise<{ fields: Record<string, string>; file: File }> {
-  // Get the underlying Node.js IncomingMessage (req) from NextRequest
   const nodeReq: IncomingMessage = req as unknown as IncomingMessage;
-
   const form = formidable({ multiples: false });
 
   return new Promise((resolve, reject) => {
     form.parse(nodeReq, (err, fields, files) => {
       if (err) return reject(err);
       const file = (Array.isArray(files.file) ? files.file[0] : files.file) as File;
-      // Convert formidable fields to Record<string, string>
       const normalizedFields: Record<string, string> = {};
       for (const key in fields) {
         const value = fields[key];
@@ -83,10 +81,30 @@ async function parseFormData(
 }
 
 // POST: Handle file upload and Firestore metadata save
-export async function POST(req: NextRequest) {
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'POST') {
+    res.status(405).json({ error: 'Method not allowed' });
+    return;
+  }
+
+  // --- SECURITY: Verify Firebase ID token ---
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, error: 'Unauthorized: No token' });
+  }
+  const idToken = authHeader.split('Bearer ')[1];
+  let decodedToken;
+  try {
+    decodedToken = await getAuth().verifyIdToken(idToken);
+  } catch (err) {
+    return res.status(401).json({ success: false, error: 'Unauthorized: Invalid token' });
+  }
+  // ------------------------------------------
+
   try {
     const { fields, file } = await parseFormData(req);
-    const { title, college, course, semester, subject, uploaderId } = fields;
+    const { title, college, category, course, semester, subject } = fields;
 
     // Authenticate with Google Drive
     const authClient = await googleAuth.getClient() as import('google-auth-library').OAuth2Client;
@@ -132,18 +150,20 @@ export async function POST(req: NextRequest) {
     await db.collection('resources').add({
       title,
       college,
+      category,
       course,
       semester,
       subject,
       drive_link: uploaded.data.webViewLink,
       created_at: new Date().toISOString(),
-      uploaderId: uploaderId || null,
-      download_count: 0, // For payout logic
+      uploaderId: decodedToken.uid,
+      download_count: 0,
+      read_count: 0,
     });
 
-    return NextResponse.json({ success: true, link: uploaded.data.webViewLink });
+    res.status(200).json({ success: true, link: uploaded.data.webViewLink });
   } catch (error) {
     console.error('Upload error:', error);
-    return NextResponse.json({ success: false, error: 'Upload failed' }, { status: 500 });
+    res.status(500).json({ success: false, error: 'Upload failed' });
   }
 }
