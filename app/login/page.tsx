@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
+import Navbar from '../components/Navbar';
 
 const LoginPage = () => {
   const router = useRouter();
@@ -61,8 +62,9 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 flex justify-center items-center px-4">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-xl p-8">
+    <div className="min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 ">
+      <Navbar />
+      <div className="max-w-md w-full bg-white rounded-lg shadow-xl p-8 mx-auto mt-10">
         <h1 className="text-3xl font-bold text-center text-indigo-700 mb-6">
           Welcome Back
         </h1>
