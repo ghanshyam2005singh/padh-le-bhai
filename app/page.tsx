@@ -107,7 +107,7 @@ export default function Home() {
       {/* Contact & Feedback */}
       <section className="py-16 bg-indigo-600 text-white text-center">
         <h2 className="text-3xl font-bold mb-4">Contact & Feedback</h2>
-        <p className="mb-6">Have questions or suggestions? <a href="mailto:support@padhlebhai.com" className="underline">Email us</a> or connect on our <a href="https://instagram.com/padhlebhai" className="underline">Instagram</a>.</p>
+        <p className="mb-6">Have questions or suggestions? <a href="mailto:outlercodie.com@gmail.com" className="underline">Email us</a> or connect on our <a href="https://www.linkedin.com/company/iron-industry-tech/" className="underline">LinkedIn</a><a href="https://x.com/iron_industry" className="underline">or Twitter</a>.</p>
         <Link href="/upload">
           <button className="bg-white text-indigo-600 font-bold px-6 py-3 rounded shadow hover:scale-105 transition">
             Upload & Earn
