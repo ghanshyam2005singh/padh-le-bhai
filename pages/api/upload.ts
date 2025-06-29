@@ -97,7 +97,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   let decodedToken;
   try {
     decodedToken = await getAuth().verifyIdToken(idToken);
-  } catch (err) {
+  } catch {
     return res.status(401).json({ success: false, error: 'Unauthorized: Invalid token' });
   }
   // ------------------------------------------

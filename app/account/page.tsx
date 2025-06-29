@@ -3,8 +3,10 @@
 import { useEffect, useState } from 'react';
 import { auth } from '@/lib/firebase';
 import { getFirestore, collection, query, where, getDocs, deleteDoc, doc, getDoc } from 'firebase/firestore';
+import { User } from 'firebase/auth';
 import toast from 'react-hot-toast';
 import Navbar from '@/app/components/Navbar';
+import Image from 'next/image';
 
 const firestore = getFirestore();
 
@@ -31,7 +33,7 @@ interface UserProfile {
 }
 
 const AccountPage = () => {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [uploads, setUploads] = useState<Upload[]>([]);
   const [loadingUploads, setLoadingUploads] = useState(true);
@@ -51,7 +53,7 @@ const AccountPage = () => {
           if (userDoc.exists()) {
             setProfile(userDoc.data() as UserProfile);
           }
-        } catch (err: any) {
+        } catch {
           toast.error('Could not load profile. Please try again later.');
           setProfile(null);
         }
@@ -88,11 +90,16 @@ const AccountPage = () => {
         }
 
         setUploads(uploadsArr);
-      } catch (err: any) {
-        if (err?.code === 'permission-denied') {
-          toast.error('You do not have permission to view uploads.');
-        } else if (err?.code === 'unavailable') {
-          toast.error('Network error. Please check your connection.');
+      } catch (err: unknown) {
+        if (typeof err === 'object' && err !== null && 'code' in err) {
+          const errorWithCode = err as { code?: string };
+          if (errorWithCode.code === 'permission-denied') {
+            toast.error('You do not have permission to view uploads.');
+          } else if (errorWithCode.code === 'unavailable') {
+            toast.error('Network error. Please check your connection.');
+          } else {
+            toast.error('Something went wrong while loading uploads.');
+          }
         } else {
           toast.error('Something went wrong while loading uploads.');
         }
@@ -116,11 +123,16 @@ const AccountPage = () => {
                   await deleteDoc(doc(firestore, 'resources', id));
                   setUploads(uploads.filter(u => u.id !== id));
                   toast.success('Upload deleted.');
-                } catch (err: any) {
-                  if (err?.code === 'permission-denied') {
-                    toast.error('You do not have permission to delete this upload.');
-                  } else if (err?.code === 'unavailable') {
-                    toast.error('Network error. Please try again.');
+                } catch (err: unknown) {
+                  if (typeof err === 'object' && err !== null && 'code' in err) {
+                    const errorWithCode = err as { code?: string };
+                    if (errorWithCode.code === 'permission-denied') {
+                      toast.error('You do not have permission to delete this upload.');
+                    } else if (errorWithCode.code === 'unavailable') {
+                      toast.error('Network error. Please try again.');
+                    } else {
+                      toast.error('Failed to delete upload. Please try again.');
+                    }
                   } else {
                     toast.error('Failed to delete upload. Please try again.');
                   }
@@ -142,7 +154,7 @@ const AccountPage = () => {
     );
   };
 
-  function formatDate(val: any) {
+  function formatDate(val: string | { seconds: number; nanoseconds: number } | undefined | null) {
     if (!val) return '';
     if (typeof val === 'string') return new Date(val).toLocaleString();
     if (typeof val === 'object' && val.seconds)
@@ -167,7 +179,7 @@ const AccountPage = () => {
           <div className="flex flex-col sm:flex-row items-center gap-4 mb-4">
             <div className="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center text-3xl text-indigo-700 overflow-hidden shadow">
               {user?.photoURL ? (
-                <img src={user.photoURL} alt="Profile" className="w-16 h-16 rounded-full object-cover" />
+                <Image src={user.photoURL} alt="Profile" className="w-16 h-16 rounded-full object-cover" />
               ) : (
                 (profile?.name?.[0] || user?.displayName?.[0] || user?.email?.[0] || 'U').toUpperCase()
               )}

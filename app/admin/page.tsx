@@ -6,20 +6,45 @@ import { getFirestore, collection, getDocs, deleteDoc, doc, updateDoc } from 'fi
 import Navbar from '@/app/components/Navbar';
 import toast from 'react-hot-toast';
 
+type User = {
+  id: string;
+  name?: string;
+  displayName?: string;
+  email: string;
+  userType?: string;
+  isVerified?: boolean;
+  isSuspicious?: boolean;
+  createdAt?: Date | { seconds: number } | string;
+};
+
 const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL as string;
 const firestore = getFirestore();
 
 export default function AdminPage() {
-  const [user, setUser] = useState<any>(null);
-  const [users, setUsers] = useState<any[]>([]);
-  const [resources, setResources] = useState<any[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  type Resource = {
+    id: string;
+    title?: string;
+    uploaderId?: string;
+    college?: string;
+    course?: string;
+    semester?: string;
+    subject?: string;
+    download_count?: number;
+    unique_downloads?: number;
+    read_count?: number;
+    unique_reads?: number;
+    created_at?: Date | { seconds: number } | string;
+    drive_link?: string;
+  };
+  
+  const [resources, setResources] = useState<Resource[]>([]);
   const [loading, setLoading] = useState(true);
   const totalReads = resources.reduce((sum, r) => sum + (r.read_count || 0), 0);
   const totalUniqueReads = resources.reduce((sum, r) => sum + (r.unique_reads || 0), 0);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (u) => {
-      setUser(u);
       if (!u || u.email !== ADMIN_EMAIL) {
         toast.error('Access denied. Admins only.');
         window.location.replace('/');
@@ -27,10 +52,18 @@ export default function AdminPage() {
       }
       try {
         const usersSnap = await getDocs(collection(firestore, 'users'));
-        setUsers(usersSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        setUsers(
+          usersSnap.docs
+            .map(doc => {
+              const data = doc.data();
+              // Ensure email is present, fallback to empty string if missing
+              return { id: doc.id, ...data, email: data.email ?? '' } as User;
+            })
+            .filter(u => u.email) // Optionally filter out users without email
+        );
         const resSnap = await getDocs(collection(firestore, 'resources'));
         setResources(resSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-      } catch (err) {
+      } catch {
         toast.error('Failed to load admin data.');
       }
       setLoading(false);
@@ -208,9 +241,9 @@ export default function AdminPage() {
                   </td>
                   <td className="p-2 text-xs">
                     {u.createdAt
-                      ? typeof u.createdAt === 'object' && u.createdAt.seconds
-                        ? new Date(u.createdAt.seconds * 1000).toLocaleDateString()
-                        : new Date(u.createdAt).toLocaleDateString()
+                      ? (typeof u.createdAt === 'object' && u.createdAt !== null && 'seconds' in u.createdAt)
+                        ? new Date((u.createdAt as { seconds: number }).seconds * 1000).toLocaleDateString()
+                        : new Date(u.createdAt as string | Date).toLocaleDateString()
                       : '-'}
                   </td>
                   <td className="p-2 flex flex-col gap-1 md:flex-row md:gap-2">
@@ -276,9 +309,9 @@ export default function AdminPage() {
                   <td className="p-2">{r.unique_reads || 0}</td>
                   <td className="p-2 text-xs">
                     {r.created_at
-                      ? typeof r.created_at === 'object' && r.created_at.seconds
-                        ? new Date(r.created_at.seconds * 1000).toLocaleDateString()
-                        : new Date(r.created_at).toLocaleDateString()
+                      ? (typeof r.created_at === 'object' && r.created_at !== null && 'seconds' in r.created_at)
+                        ? new Date((r.created_at as { seconds: number }).seconds * 1000).toLocaleDateString()
+                        : new Date(r.created_at as string | Date).toLocaleDateString()
                       : '-'}
                   </td>
                   <td className="p-2 flex gap-2">

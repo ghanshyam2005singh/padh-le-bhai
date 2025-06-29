@@ -17,7 +17,7 @@ interface Resource {
   uploader?: string;
   fileType?: string;
   drive_link: string;
-  created_at: any;
+  created_at: Date | { seconds: number; nanoseconds: number };
   college?: string;
   category?: string;
   course?: string;
@@ -87,7 +87,7 @@ const ResourcesPage = () => {
 
       setResources(data);
       setSearched(true);
-    } catch (err: unknown) {
+    } catch {
       setError('Failed to load resources');
       toast.error('Failed to load resources');
     } finally {
@@ -297,11 +297,13 @@ const ResourcesPage = () => {
                       <span className="text-xs text-gray-500">Downloads: {res.download_count || 0}</span>
                     </div>
                     <p className="text-xs text-gray-400 mt-2">
-                      Uploaded on: {res.created_at && res.created_at.seconds
-                        ? new Date(res.created_at.seconds * 1000).toLocaleDateString()
-                        : res.created_at
-                          ? new Date(res.created_at).toLocaleDateString()
-                          : '-'}
+                      Uploaded on: {
+                        res.created_at
+                          ? typeof res.created_at === 'object' && 'seconds' in res.created_at
+                            ? new Date((res.created_at as { seconds: number }).seconds * 1000).toLocaleDateString()
+                            : new Date(res.created_at as Date).toLocaleDateString()
+                          : '-'
+                      }
                     </p>
                   </div>
                   <div className="mt-4 flex flex-col gap-2">
