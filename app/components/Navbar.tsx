@@ -4,24 +4,51 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { MessageCircle, Menu, X, UserCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { auth } from '@/lib/firebase';
+import { auth, db } from '@/lib/firebase';
 import { signOut, User } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 
 const Navbar = () => {
   const pathname = usePathname();
   const [isOpen, setOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [userName, setUserName] = useState<string>('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       setUser(user);
+      
+      if (user) {
+        try {
+          // Fetch user name from Firestore users collection
+          const userDoc = await getDoc(doc(db, 'users', user.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setUserName(userData?.name || user.displayName || user.email?.split('@')[0] || 'Account');
+          } else {
+            // Fallback to displayName or email username if no Firestore document exists
+            setUserName(user.displayName || user.email?.split('@')[0] || 'Account');
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+          // Fallback to displayName or email username on error
+          setUserName(user.displayName || user.email?.split('@')[0] || 'Account');
+        }
+      } else {
+        setUserName('');
+      }
+      
+      setLoading(false);
     });
+
     return () => unsubscribe();
   }, []);
 
-   const handleLogout = async () => {
+  const handleLogout = async () => {
     await signOut(auth);
     setUser(null);
+    setUserName('');
   };
 
   const isActive = (path: string) =>
@@ -36,25 +63,25 @@ const Navbar = () => {
         </Link>
 
         {/* Hamburger for mobile */}
-       <button
-  className="md:hidden ml-auto p-1 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-  onClick={() => setOpen((prev) => !prev)}
-  aria-label="Toggle Menu"
->
-  {isOpen
-    ? <X size={28} className="text-blue-700" />
-    : <Menu size={28} className="text-blue-700" />}
-</button>
+        <button
+          className="md:hidden ml-auto p-1 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          onClick={() => setOpen((prev) => !prev)}
+          aria-label="Toggle Menu"
+        >
+          {isOpen
+            ? <X size={28} className="text-blue-700" />
+            : <Menu size={28} className="text-blue-700" />}
+        </button>
 
         {/* Desktop Links */}
         <div className="hidden md:flex flex-row gap-6 text-base items-center flex-wrap justify-end">
           <Link href="/resources" className={isActive('/resources')}>
-            Explore
+            Resources
           </Link>
           <Link href="/upload" className={isActive('/upload')}>
             Upload
           </Link>
-          {!user && (
+          {!user && !loading && (
             <>
               <Link href="/login" className={isActive('/login')}>
                 Login
@@ -66,11 +93,11 @@ const Navbar = () => {
               </Link>
             </>
           )}
-          {user && (
+          {user && !loading && (
             <>
               <Link href="/account" className="flex items-center gap-2">
                 <UserCircle size={28} className="text-blue-600" />
-                <span className="hidden md:inline text-gray-700 text-sm">{user.displayName || 'Account'}</span>
+                <span className="hidden md:inline text-gray-700 text-sm">{userName}</span>
               </Link>
               <button
                 onClick={handleLogout}
@@ -79,6 +106,13 @@ const Navbar = () => {
                 Logout
               </button>
             </>
+          )}
+          {loading && (
+            <div className="flex items-center gap-2">
+              <div className="animate-pulse">
+                <div className="h-7 w-16 bg-gray-300 rounded"></div>
+              </div>
+            </div>
           )}
           <Link href="https://iron-industry.tech/" target="_blank">
             <button
@@ -98,7 +132,7 @@ const Navbar = () => {
               className={isActive('/resources')}
               onClick={() => setOpen(false)}
             >
-              Explore
+              Resources
             </Link>
             <Link
               href="/upload"
@@ -107,7 +141,7 @@ const Navbar = () => {
             >
               Upload
             </Link>
-           {!user && (
+            {!user && !loading && (
               <>
                 <Link
                   href="/login"
@@ -123,11 +157,11 @@ const Navbar = () => {
                 </Link>
               </>
             )}
-            {user && (
+            {user && !loading && (
               <>
                 <Link href="/account" onClick={() => setOpen(false)} className="flex items-center gap-2">
                   <UserCircle size={28} className="text-blue-600" />
-                  <span className="text-gray-700 text-sm">{user.displayName || 'Account'}</span>
+                  <span className="text-gray-700 text-sm">{userName}</span>
                 </Link>
                 <button
                   onClick={() => { handleLogout(); setOpen(false); }}
@@ -136,6 +170,11 @@ const Navbar = () => {
                   Logout
                 </button>
               </>
+            )}
+            {loading && (
+              <div className="animate-pulse">
+                <div className="h-7 w-20 bg-gray-300 rounded"></div>
+              </div>
             )}
             <Link href="https://iron-industry.tech/" target="_blank" onClick={() => setOpen(false)}>
               <button

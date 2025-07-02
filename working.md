@@ -206,3 +206,8 @@ If you need assistance with specific code implementations or further customizati
 [2]: https://developers.google.com/workspace/drive/api/quickstart/nodejs?utm_source=chatgpt.com "Node.js quickstart | Google Drive"
 [3]: https://blog.tericcabrel.com/upload-file-to-google-drive-with-nodejs/?utm_source=chatgpt.com "Upload file to Google Drive with Node.js - Teco Tutorials"
 [4]: https://codersteps.com/articles/how-to-build-a-file-uploader-with-next-js-and-formidable?utm_source=chatgpt.com "How to build a file uploader with Next.js and formidable - Codersteps"
+
+
+Issue:
+3. Earnings implement
+5. Payment method give option

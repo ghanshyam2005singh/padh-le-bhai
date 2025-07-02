@@ -15,6 +15,8 @@ interface Resource {
   id: string;
   title: string;
   uploader?: string;
+   uploaderEmail?: string; // Add this if you want to show email
+  uploaderId?: string;
   fileType?: string;
   drive_link: string;
   created_at: Date | { seconds: number; nanoseconds: number };
@@ -22,6 +24,7 @@ interface Resource {
   category?: string;
   course?: string;
   semester?: string;
+  subject?: string;
   read_count?: number;
   download_count?: number;
 }
@@ -96,8 +99,12 @@ const ResourcesPage = () => {
   };
 
   const handleUploadClick = () => {
-    router.push(isLoggedIn ? '/upload' : '/signup');
-  };
+  if (isLoggedIn) {
+    router.push('/upload');
+  } else {
+    router.push('/login?redirect=' + encodeURIComponent('/upload'));
+  }
+};
 
   // Unique read/download tracking using localStorage
   const hasReadResource = (id: string) => {
@@ -149,10 +156,10 @@ const ResourcesPage = () => {
 
   // Download handler
   const handleDownload = async (resource: Resource) => {
-    if (!isLoggedIn) {
-      router.push('/login');
-      return;
-    }
+  if (!isLoggedIn) {
+    router.push('/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search));
+    return;
+  }
     if (!hasDownloadedResource(resource.id)) {
       try {
         const db = getFirestore();
@@ -286,12 +293,12 @@ const ResourcesPage = () => {
                   className="border rounded-lg p-6 bg-white shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out flex flex-col justify-between"
                 >
                   <div>
-                    <h3 className="font-semibold text-xl text-indigo-700 mb-2">{res.title}</h3>
+                    <h3 className="font-semibold text-xl text-indigo-700 mb-2">{res.subject || res.title}</h3>
                     <p className="text-sm text-gray-600 mb-1">College: {res.college || '-'}</p>
                     <p className="text-sm text-gray-600 mb-1">Category: {res.category || '-'}</p>
                     <p className="text-sm text-gray-600 mb-1">Course: {res.course || '-'}</p>
                     <p className="text-sm text-gray-600 mb-1">Semester: {res.semester || '-'}</p>
-                    <p className="text-sm text-gray-500">Uploaded by: {res.uploader || 'Anonymous'}</p>
+                    <p className="text-sm text-gray-500">Uploaded by: {res.uploader || res.uploaderEmail?.split('@')[0] || 'Anonymous'}</p>
                     <div className="flex gap-4 mt-2">
                       <span className="text-xs text-gray-500">Reads: {res.read_count || 0}</span>
                       <span className="text-xs text-gray-500">Downloads: {res.download_count || 0}</span>
@@ -367,7 +374,7 @@ const ResourcesPage = () => {
             >
               &times;
             </button>
-            <h2 className="text-xl font-bold mb-4 text-indigo-700">{readingResource.title}</h2>
+            <h2 className="text-xl font-bold mb-4 text-indigo-700">{readingResource.subject || readingResource.title}</h2>
             <div className="flex-1 min-h-[400px] flex items-center justify-center">
               {previewLoading && (
                 <div className="absolute inset-0 flex items-center justify-center bg-white/70 z-30">

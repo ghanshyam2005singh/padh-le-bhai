@@ -63,77 +63,108 @@ const UploadPage = () => {
       setShowDisclaimer(true);
       return;
     }
+    
+    if (!title || !college || !selectedCategory || !selectedCourse || !semester || !file) {
+      setError('Please fill in all fields');
+      toast.error('Please fill in all fields');
+      return;
+    }
+
+    // Get Firebase ID token for authentication
+    const user = auth.currentUser;
+    if (!user) {
+      setError('Please log in to upload');
+      toast.error('Please log in to upload');
+      return;
+    }
+
     setError('');
     setLoading(true);
     setUploadProgress(0);
     setUploadStatus('uploading');
 
     try {
+      // Get ID token for authentication
+      const idToken = await user.getIdToken();
+      
       const formData = new FormData();
       formData.append('title', title);
       formData.append('college', college);
       formData.append('category', selectedCategory);
       formData.append('course', selectedCourse);
       formData.append('semester', semester);
+      formData.append('subject', title); // Use title as subject since they are the same
       formData.append('file', file!);
       if (uploaderId) formData.append('uploaderId', uploaderId);
 
       const xhr = new XMLHttpRequest();
       xhr.open('POST', '/api/upload');
+      
+      // Add Authorization header
+      xhr.setRequestHeader('Authorization', `Bearer ${idToken}`);
+      
       xhr.upload.onprogress = (event) => {
         if (event.lengthComputable) {
           setUploadProgress(Math.round((event.loaded / event.total) * 100));
         }
       };
+      
       xhr.onload = () => {
         setUploadStatus('processing');
         setTimeout(() => {
           setLoading(false);
           setUploadStatus('done');
           setUploadProgress(100);
-          try {
-            const data = JSON.parse(xhr.responseText);
-            if (data.success) {
-              toast.success(
-                <span>
-                  Uploaded!{' '}
-                  <a href={data.link} target="_blank" rel="noopener noreferrer" className="underline text-blue-600">
-                    View File
-                  </a>
-                </span>,
-                { duration: 6000 }
-              );
-              setTitle('');
-              setCollege('');
-              setSelectedCategory('');
-              setSelectedCourse('');
-              setSemester('');
-              setFile(null);
-              setTimeout(() => setUploadStatus('idle'), 1500);
-            } else {
-              setError('Upload failed');
+          
+          if (xhr.status === 200) {
+            try {
+              const data = JSON.parse(xhr.responseText);
+              if (data.success) {
+                toast.success('Upload successful!');
+                // Reset form
+                setTitle('');
+                setCollege('');
+                setSelectedCategory('');
+                setSelectedCourse('');
+                setSemester('');
+                setFile(null);
+                setAgreed(false);
+                if (fileInputRef.current) {
+                  fileInputRef.current.value = '';
+                }
+                setTimeout(() => setUploadStatus('idle'), 1500);
+              } else {
+                setError(data.error || 'Upload failed');
+                toast.error(data.error || 'Upload failed');
+                setUploadStatus('idle');
+              }
+            } catch {
+              setError('Upload failed - Invalid response');
               toast.error('Upload failed');
               setUploadStatus('idle');
             }
-          } catch {
-            setError('Upload failed');
+          } else {
+            setError(`Upload failed - Status: ${xhr.status}`);
             toast.error('Upload failed');
             setUploadStatus('idle');
           }
-        }, 1200); // Simulate processing time after 100%
+        }, 1200);
       };
+      
       xhr.onerror = () => {
         setLoading(false);
-        setError('Upload failed');
-        toast.error('Upload failed');
+        setError('Network error - Upload failed');
+        toast.error('Network error');
         setUploadStatus('idle');
       };
+      
       xhr.send(formData);
-    } catch {
+    } catch (err) {
       setLoading(false);
       setError('Upload failed');
       toast.error('Upload failed');
       setUploadStatus('idle');
+      console.error('Upload error:', err);
     }
   };
 
@@ -168,13 +199,13 @@ const UploadPage = () => {
         </p>
         <div className="flex items-center mb-4">
           <input
-            id="agree"
+            id="agree-modal"
             type="checkbox"
             checked={agreed}
             onChange={e => setAgreed(e.target.checked)}
             className="mr-2"
           />
-          <label htmlFor="agree" className="text-gray-700 text-sm">
+          <label htmlFor="agree-modal" className="text-gray-700 text-sm">
             I have read and agree to the above disclaimer.
           </label>
         </div>
@@ -207,10 +238,10 @@ const UploadPage = () => {
           </h1>
 
           <form onSubmit={handleUpload} className="space-y-6">
-            {/* Title Input */}
+            {/* Subject Name Input */}
             <input
               type="text"
-              placeholder="Enter title (e.g. DBMS Notes)"
+              placeholder="Enter subject name (e.g. Database Management System)"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none transition-all"
@@ -229,6 +260,7 @@ const UploadPage = () => {
                 </option>
               ))}
             </select>
+
             {/* Category Dropdown */}
             <select
               value={selectedCategory}
@@ -271,7 +303,7 @@ const UploadPage = () => {
             >
               <option value="">Select Semester</option>
               {[...Array(8)].map((_, i) => (
-                <option key={i + 1} value={i + 1}>Semester {i + 1}</option>
+                <option key={i + 1} value={String(i + 1)}>Semester {i + 1}</option>
               ))}
             </select>
 
