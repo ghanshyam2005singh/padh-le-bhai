@@ -62,60 +62,68 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 ">
+    <div className="min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
       <Navbar />
-      <div className="max-w-md w-full bg-white rounded-lg shadow-xl p-8 mx-auto mt-10">
-        <h1 className="text-3xl font-bold text-center text-indigo-700 mb-6">
-          Welcome Back
-        </h1>
+      <div className="flex items-center justify-center pt-20">
+        <div className="max-w-md w-full bg-white rounded-lg shadow-xl p-8 mx-4">
+          <h1 className="text-3xl font-bold text-center text-indigo-700 mb-6">
+            Welcome Back
+          </h1>
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          <input
-            type="email"
-            placeholder="Enter Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full border p-3 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
-          />
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <input
+                type="email"
+                placeholder="Enter Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full border border-gray-300 p-3 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 text-gray-900 bg-white"
+                required
+              />
+            </div>
 
-          <input
-            type="password"
-            placeholder="Enter Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full border p-3 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
-          />
+            <div>
+              <input
+                type="password"
+                placeholder="Enter Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full border border-gray-300 p-3 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 text-gray-900 bg-white"
+                required
+              />
+            </div>
 
-          {error && <p className="text-red-500 text-sm">{error}</p>}
-          {resetSent && (
-            <p className="text-green-600 text-sm">
-              Password reset email sent! Please check your inbox.
-            </p>
-          )}
+            {error && <p className="text-red-500 text-sm">{error}</p>}
+            {resetSent && (
+              <p className="text-green-600 text-sm">
+                Password reset email sent! Please check your inbox.
+              </p>
+            )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-indigo-600 text-white py-3 rounded-lg shadow-lg hover:bg-indigo-700 transition-all"
-          >
-            {loading ? 'Logging in...' : 'Login'}
-          </button>
-        </form>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-indigo-600 text-white py-3 rounded-lg shadow-lg hover:bg-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Logging in...' : 'Login'}
+            </button>
+          </form>
 
-        <div className="flex justify-between items-center mt-4">
-          <button
-            type="button"
-            onClick={handleForgotPassword}
-            className="text-indigo-600 hover:underline text-sm font-semibold"
-          >
-            Forgot Password?
-          </button>
-          <span className="text-sm text-gray-600">
-            Don’t have an account?{' '}
-            <a href="/signup" className="text-indigo-700 font-semibold hover:underline">
-              Sign up here
-            </a>
-          </span>
+          <div className="flex justify-between items-center mt-4">
+            <button
+              type="button"
+              onClick={handleForgotPassword}
+              className="text-indigo-600 hover:underline text-sm font-semibold"
+            >
+              Forgot Password?
+            </button>
+            <span className="text-sm text-gray-600">
+              Don&#39;t have an account?{' '}
+              <a href="/signup" className="text-indigo-700 font-semibold hover:underline">
+                Signup
+              </a>
+            </span>
+          </div>
         </div>
       </div>
     </div>
