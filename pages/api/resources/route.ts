@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { initializeApp, getApps } from 'firebase/app';
 import { getFirestore, getDocs, collection, query, where, orderBy } from 'firebase/firestore';
-    import type { Query, DocumentData } from 'firebase/firestore';
+import type { Query, DocumentData } from 'firebase/firestore';
 
 // Initialize Firebase only once (for hot reloads in dev)
 const firebaseConfig = {
@@ -21,16 +21,17 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const college = searchParams.get('college');
+    const category = searchParams.get('category');
     const course = searchParams.get('course');
     const semester = searchParams.get('semester');
     const subject = searchParams.get('subject');
 
     // Build Firestore query dynamically
-
     let q: Query<DocumentData> = collection(db, 'resources');
     const filters: import('firebase/firestore').QueryConstraint[] = [];
 
     if (college) filters.push(where('college', '==', college));
+    if (category) filters.push(where('category', '==', category));
     if (course) filters.push(where('course', '==', course));
     if (semester) filters.push(where('semester', '==', semester));
     if (subject) filters.push(where('subject', '==', subject));
