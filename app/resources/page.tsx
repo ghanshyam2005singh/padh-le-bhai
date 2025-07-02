@@ -96,7 +96,7 @@ const ResourcesPage = () => {
   };
 
   const handleUploadClick = () => {
-    router.push(isLoggedIn ? '/upload' : '/signup');
+    router.push(isLoggedIn ? '/upload' : '/login');
   };
 
   // Unique read/download tracking using localStorage
