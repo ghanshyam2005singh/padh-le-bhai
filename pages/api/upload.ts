@@ -80,8 +80,22 @@ async function parseFormData(
   });
 }
 
-// POST: Handle file upload and Firestore metadata save
+// Helper: Get user name from Firestore
+async function getUserName(userId: string): Promise<string> {
+  try {
+    const userDoc = await db.collection('users').doc(userId).get();
+    if (userDoc.exists) {
+      const userData = userDoc.data();
+      return userData?.name || 'Anonymous';
+    }
+    return 'Anonymous';
+  } catch (error) {
+    console.error('Error fetching user name:', error);
+    return 'Anonymous';
+  }
+}
 
+// POST: Handle file upload and Firestore metadata save
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' });
@@ -104,7 +118,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const { fields, file } = await parseFormData(req);
-    const { title, college, category, course, semester, subject } = fields;
+    const { title, college, category, course, semester } = fields;
+
+    // Get user information from Firestore users collection
+    const userEmail = decodedToken.email || 'Anonymous';
+    const userName = await getUserName(decodedToken.uid);
+
+    console.log('User Info:', { 
+      userId: decodedToken.uid,
+      email: userEmail,
+      fetchedName: userName 
+    });
 
     // Authenticate with Google Drive
     const authClient = await googleAuth.getClient() as import('google-auth-library').OAuth2Client;
@@ -114,7 +138,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const collegeFolder = await getOrCreateFolder(drive, college);
     const courseFolder = await getOrCreateFolder(drive, course, collegeFolder);
     const semesterFolder = await getOrCreateFolder(drive, `Sem_${semester}`, courseFolder);
-    const subjectFolder = await getOrCreateFolder(drive, subject, semesterFolder);
+    const subjectFolder = await getOrCreateFolder(drive, title, semesterFolder); // Use title as subject name
 
     // Upload file to Drive
     const fileMetadata = {
@@ -153,10 +177,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       category,
       course,
       semester,
-      subject,
+      subject: title, // Use title as subject name for consistency
       drive_link: uploaded.data.webViewLink,
       created_at: new Date().toISOString(),
       uploaderId: decodedToken.uid,
+      uploader: userName, // This will now be fetched from users collection
+      uploaderEmail: userEmail,
       download_count: 0,
       read_count: 0,
     });
