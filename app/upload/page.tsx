@@ -19,7 +19,6 @@ const UploadPage = () => {
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'processing' | 'done'>('idle');
-  const uniqueCollegeList = Array.from(new Set(collegeList));
   const [uploaderId, setUploaderId] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -32,6 +31,9 @@ const UploadPage = () => {
   // Legal disclaimer modal state
   const [showDisclaimer, setShowDisclaimer] = useState(false);
   const [agreed, setAgreed] = useState(false);
+
+  // Move uniqueCollegeList outside of useEffect to avoid dependency issues
+  const uniqueCollegeList = Array.from(new Set(collegeList));
 
   // Redirect if not logged in
   useEffect(() => {
@@ -53,7 +55,7 @@ const UploadPage = () => {
     setSelectedCourse('');
   }, [selectedCategory]);
 
-  // Filter colleges based on search
+  // Filter colleges based on search - FIXED: Removed uniqueCollegeList from dependencies
   useEffect(() => {
     if (collegeSearch.trim() === '') {
       setFilteredColleges(uniqueCollegeList);
@@ -63,7 +65,7 @@ const UploadPage = () => {
       );
       setFilteredColleges(filtered);
     }
-  }, [collegeSearch, uniqueCollegeList]);
+  }, [collegeSearch]); // Removed uniqueCollegeList from dependencies
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -98,7 +100,7 @@ const UploadPage = () => {
   const handleCollegeInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setCollegeSearch(value);
-    setCollege(value); // Set college to the search value
+    setCollege(value);
     setShowCollegeDropdown(true);
   };
 
@@ -142,14 +144,13 @@ const UploadPage = () => {
       formData.append('category', selectedCategory);
       formData.append('course', selectedCourse);
       formData.append('semester', semester);
-      formData.append('subject', title); // Use title as subject since they are the same
+      formData.append('subject', title);
       formData.append('file', file!);
       if (uploaderId) formData.append('uploaderId', uploaderId);
 
       const xhr = new XMLHttpRequest();
       xhr.open('POST', '/api/upload');
       
-      // Add Authorization header
       xhr.setRequestHeader('Authorization', `Bearer ${idToken}`);
       
       xhr.upload.onprogress = (event) => {
@@ -170,7 +171,6 @@ const UploadPage = () => {
               const data = JSON.parse(xhr.responseText);
               if (data.success) {
                 toast.success('Upload successful!');
-                // Reset form
                 setTitle('');
                 setCollege('');
                 setCollegeSearch('');
@@ -234,13 +234,11 @@ const UploadPage = () => {
   // Modal for legal disclaimer
   const DisclaimerModal = () => (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Blurred background */}
       <div
         className="absolute inset-0 backdrop-blur-md bg-white/30"
         style={{ zIndex: 10 }}
         onClick={() => setShowDisclaimer(false)}
       />
-      {/* Modal */}
       <div className="bg-white rounded-lg shadow-xl max-w-lg w-full p-6 relative z-20 mx-4">
         <h2 className="text-xl font-bold mb-4 text-red-600">Legal Disclaimer</h2>
         <p className="text-gray-700 mb-4">
@@ -311,7 +309,7 @@ const UploadPage = () => {
                   className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none transition-all"
                 />
                 {showCollegeDropdown && (
-                  <div className="absolute z-[99999] w-full mt-1 bg-white border-2 border-gray-300 rounded-lg shadow-2xl max-h-60 overflow-y-auto">
+                  <div className="absolute z-[50000] w-full mt-1 bg-white border-2 border-gray-300 rounded-lg shadow-2xl max-h-60 overflow-y-auto">
                     {filteredColleges.length > 0 ? (
                       filteredColleges.map((col: string) => (
                         <div

@@ -31,7 +31,9 @@ interface Resource {
 
 const ResourcesPage = () => {
   const router = useRouter();
+  // Move uniqueCollegeList outside to avoid dependency issues
   const uniqueCollegeList = Array.from(new Set(collegeList));
+  
   const [college, setCollege] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedCourse, setSelectedCourse] = useState('');
@@ -66,7 +68,7 @@ const ResourcesPage = () => {
     setSelectedCourse('');
   }, [selectedCategory]);
 
-  // Filter colleges based on search
+  // Filter colleges based on search - FIXED: Removed uniqueCollegeList from dependencies
   useEffect(() => {
     if (collegeSearch.trim() === '') {
       setFilteredColleges(uniqueCollegeList);
@@ -76,7 +78,7 @@ const ResourcesPage = () => {
       );
       setFilteredColleges(filtered);
     }
-  }, [collegeSearch, uniqueCollegeList]);
+  }, [collegeSearch]); // Removed uniqueCollegeList from dependencies to prevent infinite loop
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -267,7 +269,7 @@ const ResourcesPage = () => {
                     className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none transition-all"
                   />
                   {showCollegeDropdown && (
-                    <div className="absolute z-[99999] w-full mt-1 bg-white border-2 border-gray-300 rounded-lg shadow-2xl max-h-60 overflow-y-auto">
+                    <div className="absolute z-[50000] w-full mt-1 bg-white border-2 border-gray-300 rounded-lg shadow-2xl max-h-60 overflow-y-auto">
                       {filteredColleges.length > 0 ? (
                         filteredColleges.map((col: string) => (
                           <div
