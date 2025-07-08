@@ -1,71 +1,97 @@
-# 📚 Notes & Assignment Sharing Platform
+# Padh-le-Bhai 📚
 
-A platform for students to select their college, course, semester, and subject to find and upload notes and assignments — built under **Iron Industry**.
-
----
-
-## 🧩 Features (In Progress)
-
-- ✅ College dropdown form
-- ⏳ Course, Semester, Subject filtering
-- ⏳ Firebase Authentication (for uploading)
-- ⏳ Firebase Storage + Firestore for files
-- ⏳ Upload with legal disclaimer popup
-- ⏳ Responsive design for desktop & mobile
-- ⏳ Navbar with contact link
-- ⏳ Footer with rights notice
+Welcome to **Padh-le-Bhai**, a cutting-edge study resource sharing platform developed by **Iron Industry Tech** — a tech startup committed to revolutionizing education through innovative solutions. This product is designed to empower students by providing a seamless way to upload, find, and download educational materials securely.
 
 ---
 
-## 🛠 Tech Stack
+## 🌟 Features
 
-- **Framework:** [Next.js 15 (App Router)](https://nextjs.org/)
-- **Styling:** Tailwind CSS
-- **Auth & Storage:** Firebase Authentication, Firebase Storage, Firestore
-- **Language:** TypeScript
+### 🔍 Resource Discovery
+- **Smart Filters**: Search resources by college, course, semester, and subject.
+- **Preview Mode**: View resources online before downloading.
+- **Authentication**: Login required for downloads to ensure secure access.
+
+### 📤 Resource Upload
+- **Secure Uploads**: Authenticated users can upload study materials.
+- **Google Drive Integration**: Files are stored securely in structured folders.
+- **Metadata Management**: Organize resources with detailed metadata.
+
+### 📊 Analytics & Tracking
+- **Download Tracking**: Unique download counts for each resource.
+- **Uploader Dashboard**: Monitor your uploaded resources and their performance.
+
+### 🔐 User Management
+- **Firebase Authentication**: Secure sign-up and login.
+- **Email Verification**: Ensure verified accounts for uploads.
+- **Access Control**: Restrict access to upload and dashboard pages for authenticated users.
 
 ---
 
-## 🚀 Getting Started
+## 🛠️ Tech Stack
 
-1. **Clone the repo**
+- **Frontend**: Next.js, React, TypeScript, Tailwind CSS.
+- **Backend**: Next.js API Routes.
+- **Authentication**: Firebase Auth.
+- **Database**: Supabase.
+- **File Storage**: Google Drive API.
+
+---
+
+## 📦 Installation
+
+1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/notes-platform.git
-   cd notes-platform
-````
-
-2. **Install dependencies**
-
-   ```bash
-   npm install
-   npm install firebase googleapis
-npm install -D tailwindcss postcss autoprefixer
-npx tailwindcss init -p
-npm install googleapis
-npm install firebase-admin
-npm install formidable
-npm install react-hot-toast
-npm install --save-dev @types/formidable
-
-
+   git clone https://github.com/your-username/padh-le-bhai.git
+   cd padh-le-bhai
    ```
 
-3. **Run the development server**
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
+3. Set up environment variables:
+   Create a `.env.local` file and add Firebase, Supabase, and Google Drive API keys.
+
+4. Run the development server:
    ```bash
    npm run dev
    ```
 
-4. **Add your college list**
-   Edit `constants/collegeList.ts`:
+5. Open your browser at [http://localhost:3000](http://localhost:3000).
 
-   ```ts
-   export const collegeData = [
-     { name: "ABC University" },
-     { name: "XYZ College" }
-     // Add more...
-   ];
-   ```
+---
+
+## 📁 Project Structure
+
+```
+padh-le-bhai/
+├── app/
+│   ├── components/
+│   ├── resources/
+│   ├── upload/
+│   ├── login/
+│   ├── signup/
+│   ├── dashboard/
+│   └── api/
+├── lib/
+├── public/
+└── README.md
+```
+
+---
+
+## 🚀 Deployment
+
+Deploy the application using platforms like Vercel or Azure. Ensure environment variables are configured correctly.
+
+---
+
+## 🌐 About Iron Industry Tech
+
+**Iron Industry Tech** is a forward-thinking tech startup dedicated to creating impactful products that solve real-world problems. **Padh-le-Bhai** is one of our flagship products, designed to simplify access to educational resources for students worldwide.
+
+Visit us at [iron-industry.tech](https://iron-industry.tech) to learn more about our mission and other innovative solutions.
 
 ---
 
