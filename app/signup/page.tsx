@@ -68,10 +68,10 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+    <div className="min-h-screen bg-[#f7f8fa]">
       <Navbar />
-      <div className="max-w-lg w-full p-8 bg-white rounded-lg shadow-xl justify-center items-center mx-auto mt-10">
-        <h1 className="text-4xl font-extrabold text-center text-indigo-700 mb-8">Create Your Account</h1>
+      <div className="max-w-lg w-full p-8 bg-white rounded-lg shadow-xl justify-center items-center mx-auto mt-10 border border-[#e0e0e0]">
+        <h1 className="text-4xl font-extrabold text-center text-[#2e3192] mb-8">Create Your Account</h1>
 
         {verificationSent ? (
           <div className="text-center">
@@ -79,7 +79,7 @@ const SignupPage = () => {
               Verification email sent! Please check your inbox and verify your email before logging in.
             </p>
             <button
-              className="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-indigo-700 transition"
+              className="bg-[#2e3192] text-white px-6 py-3 rounded-lg shadow-lg hover:bg-[#1b1f5e] transition"
               onClick={() => router.push('/login')}
             >
               Go to Login
@@ -93,7 +93,7 @@ const SignupPage = () => {
               placeholder="Full Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none transition-all"
+              className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-[#2e3192] focus:outline-none transition-all"
             />
 
             {/* Email Input */}
@@ -102,7 +102,7 @@ const SignupPage = () => {
               placeholder="Email Address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none transition-all"
+              className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-[#2e3192] focus:outline-none transition-all"
             />
 
             {/* Password Input */}
@@ -111,14 +111,14 @@ const SignupPage = () => {
               placeholder="Create Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none transition-all"
+              className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-[#2e3192] focus:outline-none transition-all"
             />
 
             {/* User Type Selector */}
             <select
               value={userType}
               onChange={(e) => setUserType(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none transition-all"
+              className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-[#2e3192] focus:outline-none transition-all"
             >
               <option value="student">Student</option>
               <option value="uploader">Uploader</option>
@@ -131,7 +131,7 @@ const SignupPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-indigo-600 text-white rounded-lg shadow-xl hover:bg-indigo-700 transition-all"
+              className="w-full py-3 bg-[#2e3192] text-white rounded-lg shadow-xl hover:bg-[#1b1f5e] transition-all disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
             >
               {loading ? 'Creating Account...' : 'Create Account'}
             </button>
@@ -143,7 +143,7 @@ const SignupPage = () => {
                 <button
                   type="button"
                   onClick={() => router.push('/login')}
-                  className="text-indigo-600 hover:underline font-semibold"
+                  className="text-[#e94f37] hover:underline font-semibold"
                 >
                   Login
                 </button>

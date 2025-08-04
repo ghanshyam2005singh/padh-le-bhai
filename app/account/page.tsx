@@ -164,28 +164,28 @@ const AccountPage = () => {
 
   if (loadingUser) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50 flex justify-center items-center">
+      <div className="min-h-screen bg-[#f7f8fa] flex justify-center items-center">
         <span className="text-lg text-gray-600 animate-pulse">Loading profile...</span>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50">
+    <div className="min-h-screen bg-[#f7f8fa]">
       <Navbar />
-      <div className="max-w-3xl mx-auto py-6 px-2">
+      <div className="max-w-3xl mx-auto py-8 px-2">
         {/* Profile Card */}
-        <div className="mb-8 bg-white rounded-2xl shadow-xl p-6">
-          <div className="flex flex-col sm:flex-row items-center gap-4 mb-4">
-            <div className="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center text-3xl text-indigo-700 overflow-hidden shadow">
+        <div className="mb-10 bg-white rounded-2xl shadow-xl p-8 border border-[#e0e0e0]">
+          <div className="flex flex-col sm:flex-row items-center gap-6 mb-6">
+            <div className="w-20 h-20 rounded-full bg-[#e0e7ff] flex items-center justify-center text-4xl text-[#2e3192] overflow-hidden shadow">
               {user?.photoURL ? (
-                <Image src={user.photoURL} alt="Profile" className="w-16 h-16 rounded-full object-cover" />
+                <Image src={user.photoURL} alt="Profile" className="w-20 h-20 rounded-full object-cover" />
               ) : (
                 (profile?.name?.[0] || user?.displayName?.[0] || user?.email?.[0] || 'U').toUpperCase()
               )}
             </div>
             <div className="flex-1 text-center sm:text-left">
-              <div className="font-bold text-xl text-indigo-700">
+              <div className="font-bold text-2xl text-[#2e3192]">
                 {profile?.name || user?.displayName || user?.email || 'No Name'}
               </div>
               <div className="text-gray-600 text-sm">{profile?.email || user?.email}</div>
@@ -208,33 +208,33 @@ const AccountPage = () => {
             </div>
           </div>
           <div className="flex flex-col sm:flex-row gap-4 mt-4">
-            <div className="flex-1 bg-indigo-50 rounded-xl p-4 text-center">
+            <div className="flex-1 bg-[#f4f6fb] rounded-xl p-4 text-center border border-[#e0e0e0]">
               <div className="font-semibold text-gray-700">Earnings</div>
               <div className="text-green-600 font-bold text-lg">Coming soon</div>
             </div>
-            <div className="flex-1 bg-indigo-50 rounded-xl p-4 text-center">
+            <div className="flex-1 bg-[#f4f6fb] rounded-xl p-4 text-center border border-[#e0e0e0]">
               <div className="font-semibold text-gray-700">Payment Method</div>
               <div className="text-gray-500 font-bold text-lg">Coming soon</div>
             </div>
           </div>
         </div>
         {/* Uploads */}
-        <h2 className="text-xl font-bold mb-4 text-indigo-700">Your Uploads</h2>
+        <h2 className="text-xl font-bold mb-4 text-[#2e3192]">Your Uploads</h2>
         <div className="space-y-4">
           {loadingUploads ? (
             Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="border rounded-2xl p-4 bg-white shadow-lg animate-pulse h-20" />
             ))
           ) : uploads.length === 0 ? (
-            <div className="text-gray-500 bg-white rounded-xl p-4 shadow text-center">No uploads yet.</div>
+            <div className="text-gray-500 bg-white rounded-xl p-4 shadow text-center border border-[#e0e0e0]">No uploads yet.</div>
           ) : (
             uploads.map(upload => (
               <div
                 key={upload.id}
-                className="border border-indigo-100 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white shadow-lg"
+                className="border border-[#e0e0e0] rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white shadow-lg"
               >
                 <div>
-                  <div className="font-bold text-indigo-700 text-base">{upload.title}</div>
+                  <div className="font-bold text-[#2e3192] text-base">{upload.title}</div>
                   <div className="text-xs text-gray-600 mb-1">
                     {upload.college} | {upload.course} | Sem {upload.semester} | {upload.subject}
                   </div>

@@ -56,10 +56,9 @@ export default function AdminPage() {
           usersSnap.docs
             .map(doc => {
               const data = doc.data();
-              // Ensure email is present, fallback to empty string if missing
               return { id: doc.id, ...data, email: data.email ?? '' } as User;
             })
-            .filter(u => u.email) // Optionally filter out users without email
+            .filter(u => u.email)
         );
         const resSnap = await getDocs(collection(firestore, 'resources'));
         setResources(resSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
@@ -164,50 +163,50 @@ export default function AdminPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-pink-50">
+      <div className="min-h-screen flex items-center justify-center bg-[#f7f8fa]">
         <span className="text-lg text-gray-600 animate-pulse">Loading admin dashboard...</span>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50">
+    <div className="min-h-screen bg-[#f7f8fa]">
       <Navbar />
       <div className="max-w-7xl mx-auto py-8 px-2">
-        <h1 className="text-3xl font-bold text-indigo-700 mb-6">Admin Dashboard</h1>
+        <h1 className="text-3xl font-bold text-[#2e3192] mb-6">Admin Dashboard</h1>
         {/* Analytics */}
         <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8">
-          <div className="bg-indigo-100 rounded-xl shadow p-4 text-center font-semibold">
-            <div className="text-2xl font-bold text-indigo-700">{users.length}</div>
+          <div className="bg-[#e0e7ff] rounded-xl shadow p-4 text-center font-semibold">
+            <div className="text-2xl font-bold text-[#2e3192]">{users.length}</div>
             <div className="text-gray-700 text-sm">Total Users</div>
           </div>
-          <div className="bg-indigo-100 rounded-xl shadow p-4 text-center font-semibold">
-            <div className="text-2xl font-bold text-indigo-700">{resources.length}</div>
+          <div className="bg-[#e0e7ff] rounded-xl shadow p-4 text-center font-semibold">
+            <div className="text-2xl font-bold text-[#2e3192]">{resources.length}</div>
             <div className="text-gray-700 text-sm">Total Uploads</div>
           </div>
-          <div className="bg-indigo-100 rounded-xl shadow p-4 text-center font-semibold">
-            <div className="text-2xl font-bold text-indigo-700">{totalDownloads}</div>
+          <div className="bg-[#e0e7ff] rounded-xl shadow p-4 text-center font-semibold">
+            <div className="text-2xl font-bold text-[#2e3192]">{totalDownloads}</div>
             <div className="text-gray-700 text-sm">Total Downloads</div>
           </div>
-          <div className="bg-indigo-100 rounded-xl shadow p-4 text-center font-semibold">
-            <div className="text-2xl font-bold text-indigo-700">{totalUniqueDownloads}</div>
+          <div className="bg-[#e0e7ff] rounded-xl shadow p-4 text-center font-semibold">
+            <div className="text-2xl font-bold text-[#2e3192]">{totalUniqueDownloads}</div>
             <div className="text-gray-700 text-sm">Unique Downloads</div>
           </div>
-          <div className="bg-indigo-100 rounded-xl shadow p-4 text-center font-semibold">
-            <div className="text-2xl font-bold text-indigo-700">{totalReads}</div>
+          <div className="bg-[#e0e7ff] rounded-xl shadow p-4 text-center font-semibold">
+            <div className="text-2xl font-bold text-[#2e3192]">{totalReads}</div>
             <div className="text-gray-700 text-sm">Total Views</div>
           </div>
-          <div className="bg-indigo-100 rounded-xl shadow p-4 text-center font-semibold">
-            <div className="text-2xl font-bold text-indigo-700">{totalUniqueReads}</div>
+          <div className="bg-[#e0e7ff] rounded-xl shadow p-4 text-center font-semibold">
+            <div className="text-2xl font-bold text-[#2e3192]">{totalUniqueReads}</div>
             <div className="text-gray-700 text-sm">Unique Views</div>
           </div>
         </div>
         {/* Users Table */}
-        <h2 className="text-xl font-bold mb-2 text-indigo-700">Users</h2>
+        <h2 className="text-xl font-bold mb-2 text-[#2e3192]">Users</h2>
         <div className="overflow-x-auto mb-8">
           <table className="min-w-full bg-white rounded-xl shadow text-xs md:text-sm">
             <thead>
-              <tr className="bg-indigo-50 font-semibold text-gray-900">
+              <tr className="bg-[#e0e7ff] font-semibold text-gray-900">
                 <th className="p-2 text-left">Name</th>
                 <th className="p-2 text-left">Email</th>
                 <th className="p-2 text-left">Type</th>
@@ -221,7 +220,7 @@ export default function AdminPage() {
             </thead>
             <tbody>
               {users.map(u => (
-                <tr key={u.id} className="border-t hover:bg-indigo-50 font-medium text-gray-800">
+                <tr key={u.id} className="border-t hover:bg-[#f4f6fb] font-medium text-gray-800">
                   <td className="p-2">{u.name || u.displayName || '-'}</td>
                   <td className="p-2 break-all">{u.email}</td>
                   <td className="p-2 capitalize">{u.userType || '-'}</td>
@@ -275,11 +274,11 @@ export default function AdminPage() {
           </table>
         </div>
         {/* Resources Table */}
-       <h2 className="text-xl font-bold mb-2 text-indigo-700">Resources</h2>
+        <h2 className="text-xl font-bold mb-2 text-[#2e3192]">Resources</h2>
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white rounded-xl shadow text-xs md:text-sm">
             <thead>
-              <tr className="bg-indigo-50 font-semibold text-gray-900">
+              <tr className="bg-[#e0e7ff] font-semibold text-gray-900">
                 <th className="p-2 text-left">Title</th>
                 <th className="p-2 text-left">Uploader</th>
                 <th className="p-2 text-left">College</th>
@@ -296,7 +295,7 @@ export default function AdminPage() {
             </thead>
             <tbody>
               {resources.map(r => (
-                <tr key={r.id} className="border-t hover:bg-indigo-50 font-medium text-gray-800">
+                <tr key={r.id} className="border-t hover:bg-[#f4f6fb] font-medium text-gray-800">
                   <td className="p-2">{r.title}</td>
                   <td className="p-2 break-all">{r.uploaderId}</td>
                   <td className="p-2">{r.college || '-'}</td>

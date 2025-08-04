@@ -1,118 +1,89 @@
 import Link from "next/link";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
+import { BookOpen, UploadCloud, Star } from "lucide-react";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white text-gray-800 flex flex-col">
+    <main className="min-h-screen flex flex-col bg-[#f7f8fa] text-gray-900 font-sans">
       <Navbar />
 
       {/* Hero Section */}
-      <section className="py-20 px-6 text-center bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">Padh-le-Bhai 📚</h1>
-        <p className="text-lg md:text-xl max-w-2xl mx-auto">
-          Access notes, assignments, and resources organized by college, course, semester, and subject — for free. No login needed to explore!
+      <section className="relative z-10 flex flex-col items-center justify-center flex-1 py-24 px-6 text-center">
+        <h1 className="text-5xl md:text-6xl font-extrabold mb-6 text-[#2e3192] drop-shadow-lg">
+          Padh-le-Bhai 📚
+        </h1>
+        <p className="text-lg md:text-2xl max-w-2xl mx-auto mb-10 text-gray-700">
+          Discover, share, and earn from study resources. Built for students, by students.
         </p>
-        <div className="mt-6 flex justify-center gap-4 flex-wrap">
+        <div className="flex flex-wrap justify-center gap-6 mb-6">
           <Link href="/resources">
-            <button className="bg-white text-blue-700 font-semibold px-6 py-3 rounded shadow hover:scale-105 transition">
-              Explore Resources
+            <button className="flex items-center gap-2 px-8 py-3 rounded-xl bg-[#2e3192] text-white font-bold shadow-lg hover:scale-105 hover:shadow-xl transition-all duration-200 border-none outline-none">
+              <BookOpen size={20} /> Explore Resources
             </button>
           </Link>
           <Link href="/upload">
-            <button className="bg-transparent border border-white text-white px-6 py-3 rounded hover:bg-white hover:text-blue-600 transition">
-              Start Uploading
+            <button className="flex items-center gap-2 px-8 py-3 rounded-xl bg-white text-[#2e3192] font-bold shadow-lg border border-[#e0e0e0] hover:bg-[#f0f0f0] hover:text-[#1b1f5e] hover:scale-105 transition-all duration-200">
+              <UploadCloud size={20} /> Upload & Earn
             </button>
           </Link>
         </div>
+        <div className="mt-2 text-sm text-gray-500">
+          <Star className="inline-block text-yellow-400 mr-1" size={16} />
+          Trusted by 1000+ students
+        </div>
       </section>
+
+      {/* Divider */}
+      <div className="w-full h-px bg-[#e0e0e0] my-8" />
 
       {/* How It Works */}
-      <section className="py-16 px-6 bg-gray-100 text-center">
-        <h2 className="text-3xl font-semibold mb-10">How It Works</h2>
+      <section className="relative z-10 py-16 px-6 bg-white">
+        <h2 className="text-3xl md:text-4xl font-bold mb-10 text-center text-[#2e3192]">
+          How It Works
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          <div className="bg-white p-6 rounded shadow">
-            <h3 className="text-xl font-bold mb-2">1. Resources</h3>
-            <p>Browse and read notes freely, no account required.</p>
+          <div className="bg-[#f4f6fb] rounded-2xl p-8 shadow-md border border-[#e0e0e0] flex flex-col items-center">
+            <BookOpen className="mb-4 text-[#2e3192]" size={36} />
+            <h3 className="text-xl font-bold mb-2 text-[#2e3192]">1. Discover</h3>
+            <p className="text-center">Browse and preview notes and assignments for free.</p>
           </div>
-          <div className="bg-white p-6 rounded shadow">
-            <h3 className="text-xl font-bold mb-2">2. Download or Upload</h3>
-            <p>Login or sign up to download files or share your own content.</p>
+          <div className="bg-[#f4f6fb] rounded-2xl p-8 shadow-md border border-[#e0e0e0] flex flex-col items-center">
+            <UploadCloud className="mb-4 text-[#e94f37]" size={36} />
+            <h3 className="text-xl font-bold mb-2 text-[#e94f37]">2. Upload</h3>
+            <p className="text-center">Login to upload your resources and help others.</p>
           </div>
-          <div className="bg-white p-6 rounded shadow">
-            <h3 className="text-xl font-bold mb-2">3. Earn from Downloads</h3>
-            <p>Track your content’s performance and earn based on unique downloads.</p>
+          <div className="bg-[#f4f6fb] rounded-2xl p-8 shadow-md border border-[#e0e0e0] flex flex-col items-center">
+            <Star className="mb-4 text-[#7b2ff2]" size={36} />
+            <h3 className="text-xl font-bold mb-2 text-[#7b2ff2]">3. Earn</h3>
+            <p className="text-center">Track your uploads and earn from unique downloads.</p>
           </div>
         </div>
       </section>
 
-      {/* Benefits Section */}
-      <section className="py-16 px-6 bg-white text-center">
-        <h2 className="text-3xl font-semibold mb-10">Benefits</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          <div className="p-6 border rounded">
-            <h3 className="font-bold mb-2">🌟 Free & Open</h3>
-            <p>Access a wide range of study materials for free, anytime.</p>
-          </div>
-          <div className="p-6 border rounded">
-            <h3 className="font-bold mb-2">🤝 Community Driven</h3>
-            <p>Help your peers and juniors by sharing your own notes and assignments.</p>
-          </div>
-          <div className="p-6 border rounded">
-            <h3 className="font-bold mb-2">⚡ Easy & Fast</h3>
-            <p>Instant upload and download. No complicated steps.</p>
-          </div>
-        </div>
-      </section>
+      {/* Divider */}
+      <div className="w-full h-px bg-[#e0e0e0] my-8" />
 
       {/* About Section */}
-      <section className="py-16 px-6 bg-gray-100 text-center">
-        <h2 className="text-3xl font-semibold mb-6">About Padh-le-Bhai</h2>
-        <p className="max-w-3xl mx-auto text-lg text-gray-700 mb-6">
-          <strong>Padh-le-Bhai</strong> is a student-driven platform to make study resources accessible for everyone. Our mission is to empower students to learn, share, and succeed together. Whether you need notes for your next exam or want to help others by uploading your own, this is the place for you!
+      <section className="relative z-10 py-16 px-6 bg-[#f7f8fa]">
+        <h2 className="text-3xl md:text-4xl font-bold mb-6 text-center text-[#2e3192]">
+          About Padh-le-Bhai
+        </h2>
+        <p className="max-w-3xl mx-auto text-lg text-gray-700 mb-8 text-center">
+          <strong>Padh-le-Bhai</strong> is a platform by <a href="https://iron-industry.tech" target="_blank" className="underline text-[#e94f37]">Iron-Industry</a> to make study resources accessible for everyone. Join our community and help students succeed together.
         </p>
         <div className="flex justify-center gap-4">
           <Link href="/resources">
-            <button className="bg-indigo-600 text-white px-6 py-3 rounded shadow hover:bg-indigo-700 transition">
+            <button className="bg-[#2e3192] text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:bg-[#1b1f5e] hover:scale-105 transition">
               Browse Notes
             </button>
           </Link>
           <Link href="/upload">
-            <button className="bg-green-600 text-white px-6 py-3 rounded shadow hover:bg-green-700 transition">
+            <button className="bg-white text-[#2e3192] px-8 py-3 rounded-xl font-bold shadow-lg border border-[#e0e0e0] hover:bg-[#f0f0f0] hover:text-[#1b1f5e] hover:scale-105 transition">
               Upload Now
             </button>
           </Link>
         </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-16 px-6 bg-white text-center">
-        <h2 className="text-3xl font-semibold mb-8">Frequently Asked Questions</h2>
-        <div className="max-w-3xl mx-auto text-left space-y-6">
-          <div>
-            <h4 className="font-bold mb-1">Is it really free?</h4>
-            <p>Yes! You can browse and read resources without any cost or login. Downloading and uploading require a free account.</p>
-          </div>
-          <div>
-            <h4 className="font-bold mb-1">How do I earn?</h4>
-            <p>You earn based on unique downloads of your uploaded resources. Track your stats in your account dashboard.</p>
-          </div>
-          <div>
-            <h4 className="font-bold mb-1">What can I upload?</h4>
-            <p>Notes, assignments, presentations, and any study material that helps others. Please avoid copyrighted or inappropriate content.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact & Feedback */}
-      <section className="py-16 bg-indigo-600 text-white text-center">
-        <h2 className="text-3xl font-bold mb-4">Contact & Feedback</h2>
-        <p className="mb-6">Have questions or suggestions? <a href="mailto:outlercodie.com@gmail.com" className="underline">Email us</a> or connect on our <a href="https://www.linkedin.com/company/iron-industry-tech/" className="underline">LinkedIn</a><a href="https://x.com/iron_industry" className="underline"> or Twitter</a>.</p>
-        <Link href="/upload">
-          <button className="bg-white text-indigo-600 font-bold px-6 py-3 rounded shadow hover:scale-105 transition">
-            Upload & Earn
-          </button>
-        </Link>
       </section>
 
       <Footer />

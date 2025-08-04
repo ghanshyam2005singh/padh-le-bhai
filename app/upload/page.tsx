@@ -277,12 +277,12 @@ const UploadPage = () => {
   );
   
   return (
-    <div className="min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+    <div className="min-h-screen bg-[#f7f8fa]">
       <Navbar />
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-xl">
           <div className="p-6 sm:p-8">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center text-indigo-700 mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-center text-[#2e3192] mb-6 sm:mb-8">
               Upload Study Resource
             </h1>
 
