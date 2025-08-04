@@ -28,7 +28,7 @@ const Navbar = () => {
           } else {
             setUserName(user.displayName || user.email?.split('@')[0] || 'Account');
           }
-        } catch (error) {
+        } catch {
           setUserName(user.displayName || user.email?.split('@')[0] || 'Account');
         }
       } else {

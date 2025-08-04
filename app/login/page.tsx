@@ -41,7 +41,7 @@ const LoginForm = () => {
 
       // Redirect to the intended page
       router.push(redirectTo);
-    } catch (err: unknown) {
+    } catch {
       setError('Invalid email or password. Please try again.');
     } finally {
       setLoading(false);
