@@ -31,7 +31,6 @@ interface Resource {
 
 const ResourcesPage = () => {
   const router = useRouter();
-  // Move uniqueCollegeList outside to avoid dependency issues
   const uniqueCollegeList = Array.from(new Set(collegeList));
   
   const [college, setCollege] = useState('');
@@ -68,7 +67,6 @@ const ResourcesPage = () => {
     setSelectedCourse('');
   }, [selectedCategory]);
 
-  // Filter colleges based on search - FIXED: Removed uniqueCollegeList from dependencies
   useEffect(() => {
     if (collegeSearch.trim() === '') {
       setFilteredColleges(uniqueCollegeList);
@@ -78,9 +76,8 @@ const ResourcesPage = () => {
       );
       setFilteredColleges(filtered);
     }
-  }, [collegeSearch]); // Removed uniqueCollegeList from dependencies to prevent infinite loop
+  }, [collegeSearch]);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (collegeDropdownRef.current && !collegeDropdownRef.current.contains(event.target as Node)) {
@@ -239,13 +236,13 @@ const ResourcesPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+    <div className="min-h-screen bg-[#f7f8fa]">
       <Navbar />
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-xl">
           <div className="p-6 sm:p-8">
             <div className="flex justify-between items-center mb-8 flex-col md:flex-row gap-4">
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-indigo-700">Find Study Resources</h1>
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-[#2e3192]">Find Study Resources</h1>
               <button
                 onClick={handleUploadClick}
                 className={`py-3 px-6 text-white rounded-lg shadow-md transition-all text-sm sm:text-base ${
@@ -266,7 +263,7 @@ const ResourcesPage = () => {
                     value={collegeSearch}
                     onChange={handleCollegeInputChange}
                     onFocus={handleCollegeInputFocus}
-                    className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none transition-all"
+                    className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-[#2e3192] focus:outline-none transition-all"
                   />
                   {showCollegeDropdown && (
                     <div className="absolute z-[50000] w-full mt-1 bg-white border-2 border-gray-300 rounded-lg shadow-2xl max-h-60 overflow-y-auto">
@@ -275,7 +272,7 @@ const ResourcesPage = () => {
                           <div
                             key={col}
                             onClick={() => handleCollegeSelect(col)}
-                            className="px-4 py-3 hover:bg-indigo-100 hover:text-indigo-800 border-b border-gray-200 last:border-b-0 transition-colors cursor-pointer text-gray-800 font-medium"
+                            className="px-4 py-3 hover:bg-[#e0e7ff] hover:text-[#2e3192] border-b border-gray-200 last:border-b-0 transition-colors cursor-pointer text-gray-800 font-medium"
                           >
                             <div className="break-words whitespace-normal leading-relaxed text-sm">
                               {col}
@@ -295,7 +292,7 @@ const ResourcesPage = () => {
                 <select
                   value={selectedCategory}
                   onChange={e => setSelectedCategory(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none transition-all"
+                  className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-[#2e3192] focus:outline-none transition-all"
                 >
                   <option value="">Select Category</option>
                   {categoriesWithCourses.map(cat => (
@@ -313,7 +310,7 @@ const ResourcesPage = () => {
                   className={`w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none transition-all ${
                     !selectedCategory
                       ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                      : 'bg-gray-100 text-gray-700 focus:ring-2 focus:ring-indigo-600'
+                      : 'bg-gray-100 text-gray-700 focus:ring-2 focus:ring-[#2e3192]'
                   }`}
                   title={!selectedCategory ? 'Select a category first' : ''}
                 >
@@ -329,7 +326,7 @@ const ResourcesPage = () => {
                 <select
                   value={semester}
                   onChange={(e) => setSemester(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none transition-all"
+                  className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg shadow-sm focus:ring-2 focus:ring-[#2e3192] focus:outline-none transition-all"
                 >
                   <option value="">Select Semester</option>
                   {[...Array(8)].map((_, i) => (
@@ -340,13 +337,13 @@ const ResourcesPage = () => {
 
               <button
                 type="submit"
-                className="w-full py-3 bg-indigo-600 text-white rounded-lg shadow-lg hover:bg-indigo-700 transition-all text-sm sm:text-base"
+                className="w-full py-3 bg-[#2e3192] text-white rounded-lg shadow-lg hover:bg-[#1b1f5e] transition-all text-sm sm:text-base"
               >
                 Search Resources
               </button>
             </form>
 
-            {loading && <p className="text-center text-indigo-700 py-4">Loading resources...</p>}
+            {loading && <p className="text-center text-[#2e3192] py-4">Loading resources...</p>}
             {error && <p className="text-center text-red-600 py-4">{error}</p>}
 
             {searched && resources.length === 0 && !loading && !error && (
@@ -357,7 +354,7 @@ const ResourcesPage = () => {
                 </p>
                 <button
                   onClick={handleUploadClick}
-                  className="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-indigo-700 transition text-sm sm:text-base"
+                  className="bg-[#2e3192] text-white px-6 py-3 rounded-lg shadow-lg hover:bg-[#1b1f5e] transition text-sm sm:text-base"
                 >
                   Upload Resource
                 </button>
@@ -369,10 +366,10 @@ const ResourcesPage = () => {
                 {resources.map((res) => (
                   <div
                     key={res.id}
-                    className="border rounded-lg p-6 bg-white shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out flex flex-col justify-between"
+                    className="border border-[#e0e0e0] rounded-lg p-6 bg-white shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out flex flex-col justify-between"
                   >
                     <div>
-                      <h3 className="font-semibold text-xl text-indigo-700 mb-2 break-words">{res.subject || res.title}</h3>
+                      <h3 className="font-semibold text-xl text-[#2e3192] mb-2 break-words">{res.subject || res.title}</h3>
                       <p className="text-sm text-gray-600 mb-1">College: {res.college || '-'}</p>
                       <p className="text-sm text-gray-600 mb-1">Category: {res.category || '-'}</p>
                       <p className="text-sm text-gray-600 mb-1">Course: {res.course || '-'}</p>
@@ -394,7 +391,7 @@ const ResourcesPage = () => {
                     </div>
                     <div className="mt-4 flex flex-col gap-2">
                       <button
-                        className="w-full bg-indigo-600 text-white py-2 rounded-lg shadow-lg hover:bg-indigo-700 transition-all text-sm"
+                        className="w-full bg-[#2e3192] text-white py-2 rounded-lg shadow-lg hover:bg-[#1b1f5e] transition-all text-sm"
                         onClick={() => handleRead(res)}
                       >
                         Read (Preview)
@@ -426,7 +423,7 @@ const ResourcesPage = () => {
                 </p>
                 <button
                   onClick={handleUploadClick}
-                  className="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-indigo-700 transition text-sm sm:text-base"
+                  className="bg-[#2e3192] text-white px-6 py-3 rounded-lg shadow-lg hover:bg-[#1b1f5e] transition text-sm sm:text-base"
                 >
                   Upload Resource
                 </button>
@@ -454,16 +451,16 @@ const ResourcesPage = () => {
             >
               &times;
             </button>
-            <h2 className="text-xl font-bold mb-4 text-indigo-700 pr-8 break-words">{readingResource.subject || readingResource.title}</h2>
+            <h2 className="text-xl font-bold mb-4 text-[#2e3192] pr-8 break-words">{readingResource.subject || readingResource.title}</h2>
             <div className="flex-1 min-h-[400px] flex items-center justify-center relative">
               {previewLoading && (
                 <div className="absolute inset-0 flex items-center justify-center bg-white/70 z-30">
                   <div className="flex flex-col items-center">
-                    <svg className="animate-spin h-8 w-8 text-indigo-600 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <svg className="animate-spin h-8 w-8 text-[#2e3192] mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
                     </svg>
-                    <span className="text-indigo-700 font-semibold">Loading preview...</span>
+                    <span className="text-[#2e3192] font-semibold">Loading preview...</span>
                   </div>
                 </div>
               )}
