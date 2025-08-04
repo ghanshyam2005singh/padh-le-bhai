@@ -18,27 +18,23 @@ const Navbar = () => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       setUser(user);
-      
+
       if (user) {
         try {
-          // Fetch user name from Firestore users collection
           const userDoc = await getDoc(doc(db, 'users', user.uid));
           if (userDoc.exists()) {
             const userData = userDoc.data();
             setUserName(userData?.name || user.displayName || user.email?.split('@')[0] || 'Account');
           } else {
-            // Fallback to displayName or email username if no Firestore document exists
             setUserName(user.displayName || user.email?.split('@')[0] || 'Account');
           }
         } catch (error) {
-          console.error('Error fetching user data:', error);
-          // Fallback to displayName or email username on error
           setUserName(user.displayName || user.email?.split('@')[0] || 'Account');
         }
       } else {
         setUserName('');
       }
-      
+
       setLoading(false);
     });
 
@@ -52,25 +48,25 @@ const Navbar = () => {
   };
 
   const isActive = (path: string) =>
-    pathname === path ? 'text-blue-600 font-semibold' : 'text-gray-700';
+    pathname === path ? 'text-[#2e3192] font-semibold' : 'text-gray-700';
 
   return (
-    <nav className="bg-white border-b shadow-sm px-4 md:px-8 py-4 sticky top-0 z-50">
+    <nav className="bg-white border-b border-[#e0e0e0] shadow-sm px-4 md:px-8 py-4 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex items-center justify-between relative">
         {/* Logo */}
-        <Link href="/" className="text-xl font-bold text-blue-700">
+        <Link href="/" className="text-xl font-bold text-[#2e3192] tracking-tight">
           Padh-le-Bhai
         </Link>
 
         {/* Hamburger for mobile */}
         <button
-          className="md:hidden ml-auto p-1 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="md:hidden ml-auto p-1 rounded focus:outline-none focus:ring-2 focus:ring-[#2e3192]"
           onClick={() => setOpen((prev) => !prev)}
           aria-label="Toggle Menu"
         >
           {isOpen
-            ? <X size={28} className="text-blue-700" />
-            : <Menu size={28} className="text-blue-700" />}
+            ? <X size={28} className="text-[#2e3192]" />
+            : <Menu size={28} className="text-[#2e3192]" />}
         </button>
 
         {/* Desktop Links */}
@@ -87,7 +83,7 @@ const Navbar = () => {
                 Login
               </Link>
               <Link href="/signup">
-                <button className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700 text-sm">
+                <button className="bg-[#2e3192] text-white px-4 py-1.5 rounded hover:bg-[#1b1f5e] text-sm transition">
                   Sign Up
                 </button>
               </Link>
@@ -96,12 +92,12 @@ const Navbar = () => {
           {user && !loading && (
             <>
               <Link href="/account" className="flex items-center gap-2">
-                <UserCircle size={28} className="text-blue-600" />
+                <UserCircle size={28} className="text-[#2e3192]" />
                 <span className="hidden md:inline text-gray-700 text-sm">{userName}</span>
               </Link>
               <button
                 onClick={handleLogout}
-                className="ml-2 bg-gray-200 text-gray-700 px-3 py-1.5 rounded hover:bg-gray-300 text-sm"
+                className="ml-2 bg-gray-200 text-gray-700 px-3 py-1.5 rounded hover:bg-gray-300 text-sm transition"
               >
                 Logout
               </button>
@@ -116,7 +112,7 @@ const Navbar = () => {
           )}
           <Link href="https://iron-industry.tech/" target="_blank">
             <button
-              className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-red-600 text-white px-4 py-1.5 rounded hover:from-pink-600 hover:to-red-700 text-sm shadow-md transition-all"
+              className="flex items-center gap-2 bg-[#e94f37] text-white px-4 py-1.5 rounded hover:bg-[#2e3192] hover:text-white text-sm shadow-md transition-all"
             >
               <MessageCircle size={16} />
               Contact Us
@@ -126,7 +122,7 @@ const Navbar = () => {
 
         {/* Mobile Dropdown Menu */}
         {isOpen && (
-          <div className="md:hidden absolute left-0 top-full bg-white shadow-lg rounded-b-lg flex flex-col gap-4 py-4 px-6 z-50 animate-fade-in">
+          <div className="md:hidden absolute left-0 top-full bg-white shadow-lg rounded-b-lg flex flex-col gap-4 py-4 px-6 z-50 animate-fade-in w-full">
             <Link
               href="/resources"
               className={isActive('/resources')}
@@ -151,7 +147,7 @@ const Navbar = () => {
                   Login
                 </Link>
                 <Link href="/signup" onClick={() => setOpen(false)}>
-                  <button className="bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700 text-sm w-full text-left">
+                  <button className="bg-[#2e3192] text-white px-4 py-1.5 rounded hover:bg-[#1b1f5e] text-sm w-full text-left transition">
                     Sign Up
                   </button>
                 </Link>
@@ -160,12 +156,12 @@ const Navbar = () => {
             {user && !loading && (
               <>
                 <Link href="/account" onClick={() => setOpen(false)} className="flex items-center gap-2">
-                  <UserCircle size={28} className="text-blue-600" />
+                  <UserCircle size={28} className="text-[#2e3192]" />
                   <span className="text-gray-700 text-sm">{userName}</span>
                 </Link>
                 <button
                   onClick={() => { handleLogout(); setOpen(false); }}
-                  className="mt-2 bg-gray-200 text-gray-700 px-3 py-1.5 rounded hover:bg-gray-300 text-sm w-full text-left"
+                  className="mt-2 bg-gray-200 text-gray-700 px-3 py-1.5 rounded hover:bg-gray-300 text-sm w-full text-left transition"
                 >
                   Logout
                 </button>
@@ -178,7 +174,7 @@ const Navbar = () => {
             )}
             <Link href="https://iron-industry.tech/" target="_blank" onClick={() => setOpen(false)}>
               <button
-                className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-red-600 text-white px-4 py-1.5 rounded hover:from-pink-600 hover:to-red-700 text-sm shadow-md transition-all w-full text-left"
+                className="flex items-center gap-2 bg-[#e94f37] text-white px-4 py-1.5 rounded hover:bg-[#2e3192] hover:text-white text-sm shadow-md transition-all w-full text-left"
               >
                 <MessageCircle size={16} />
                 Contact Us
